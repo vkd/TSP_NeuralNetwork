@@ -26,16 +26,17 @@ class Neural_Network_TSP:
 
 
 	def __init_states__(self):
-		random.seed()
+		#random.seed()
 		for i in range(self.__count_sities__):
 			#__W__.append([])
 			self.__state__.append([])
 			for j in range(self.__count_sities__):
 				#__W__[i].append(__start_init_type_statement__)
-				self.__state__[i].append(random.random()) #Return the next random floating point number in the range [0.0, 1.0)
+				self.__state__[i].append(0.5)#random.random()) #Return the next random floating point number in the range [0.0, 1.0)
 
 
 	def __calc_W__(self, x, i, y, j):
+		#print 'd' + str(self.__dist__[x][y])
 		return - self.__A__ * self.__sigma__(x, y) * (self.__start_init_type_statement_one__ - self.__sigma__(i, j)) \
 			   - self.__B__ * self.__sigma__(i, j) * (self.__start_init_type_statement_one__ - self.__sigma__(x, y)) \
 			   - self.__C__ * self.__dist__[x][y] * (self.__sigma__(i, j - 1) + self.__sigma__(i, j + 1)) \
@@ -52,25 +53,29 @@ class Neural_Network_TSP:
 
 	def __update_state__(self):
 		is_change = True
+		next_state = self.__state__
+
 		for x in range(self.__count_sities__):
 			for i in range(self.__count_sities__):
 				cur_signal = self.__start_init_type_statement__
 
 				for y in range(self.__count_sities__):
 					for j in range(self.__count_sities__):
+						#print 'w' + str(self.__calc_W__(x, i, y, j))
 						cur_signal += self.__calc_W__(x, i, y, j) * self.__state__[y][j]
 
 				print cur_signal
-				if self.__state__[x][i] != self.__function__(cur_signal):
+				if next_state[x][i] != self.__function__(cur_signal):
 					is_change = False
-				self.__state__[x][i] = self.__function__(cur_signal)
+				next_state[x][i] = self.__function__(cur_signal)
+		self.__state__ = next_state
 		return is_change
 
 
 	def run(self):
 		i = 0
 		changed = False
-		while i < 5 and not changed:
+		while i < 1 and not changed:
 			changed = self.__update_state__()
 			i += 1
 		print self.__state__
@@ -83,8 +88,13 @@ def f(x):
 		return 0.0
 	return 1.0
 
-dist = [[0., 90., 50.],
-		[90., 0., 40.],
+#dist = [[0., 70., 50., 30.],
+#		[70., 0., 40., 70.],
+#		[50., 40., 0., 30.],
+#		[30., 70., 30., 0.]]
+
+dist = [[0., 70., 50.],
+		[70., 0., 40.],
 		[50., 40., 0.]]
 
 #print random.random()
