@@ -35,14 +35,14 @@ class Neural_Network_TSP:
 				self.__state__[i].append(random.random()) #Return the next random floating point number in the range [0.0, 1.0)
 
 
-	def __calc_W__(x, i, y, j):
+	def __calc_W__(self, x, i, y, j):
 		return - self.__A__ * self.__sigma__(x, y) * (self.__start_init_type_statement_one__ - self.__sigma__(i, j)) \
 			   - self.__B__ * self.__sigma__(i, j) * (self.__start_init_type_statement_one__ - self.__sigma__(x, y)) \
 			   - self.__C__ * self.__dist__[x][y] * (self.__sigma__(i, j - 1) + self.__sigma__(i, j + 1)) \
 			   + self.__D__
 
 
-	def __sigma__(i, j):
+	def __sigma__(self, i, j):
 		i %= self.__count_sities__
 		j %= self.__count_sities__
 		if i == j:
@@ -50,7 +50,8 @@ class Neural_Network_TSP:
 		return self.__start_init_type_statement__
 
 
-	def __update_state__():
+	def __update_state__(self):
+		is_change = True
 		for x in range(self.__count_sities__):
 			for i in range(self.__count_sities__):
 				cur_signal = self.__start_init_type_statement__
@@ -59,23 +60,33 @@ class Neural_Network_TSP:
 					for j in range(self.__count_sities__):
 						cur_signal += self.__calc_W__(x, i, y, j) * self.__state__[y][j]
 
+				print cur_signal
+				if self.__state__[x][i] != self.__function__(cur_signal):
+					is_change = False
 				self.__state__[x][i] = self.__function__(cur_signal)
+		return is_change
 
 
+	def run(self):
+		i = 0
+		changed = False
+		while i < 5 and not changed:
+			changed = self.__update_state__()
+			i += 1
+		print self.__state__
 
-	def run():
-		self.__update_state__()
 		#return step_function(x)
 
 
 def f(x):
-	if x == 0.0:
+	if x <= 0.0:
 		return 0.0
 	return 1.0
 
-dist = [[0., 2., 5.],
-		[2., 0., 4.],
-		[5., 4., 0.]]
+dist = [[0., 90., 50.],
+		[90., 0., 40.],
+		[50., 40., 0.]]
 
 #print random.random()
 nn = Neural_Network_TSP(dist, f)
+nn.run()
