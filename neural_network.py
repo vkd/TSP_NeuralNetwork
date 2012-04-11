@@ -10,8 +10,8 @@ class Neural_Network_TSP:
 
 	__A__ = 100.0
 	__B__ = 100.0
-	__C__ = 100.0
-	__D__ = 100.0
+	__C__ = 10.0
+	__D__ = 90.0
 
 	__state__ = []
 	__dist__ = []
@@ -53,7 +53,6 @@ class Neural_Network_TSP:
 
 	def __update_state__(self):
 		is_change = True
-		next_state = self.__state__
 
 		for x in range(self.__count_sities__):
 			for i in range(self.__count_sities__):
@@ -65,10 +64,10 @@ class Neural_Network_TSP:
 						cur_signal += self.__calc_W__(x, i, y, j) * self.__state__[y][j]
 
 				print cur_signal
-				if next_state[x][i] != self.__function__(cur_signal):
+				if self.__state__[x][i] != self.__function__(cur_signal):
 					is_change = False
-				next_state[x][i] = self.__function__(cur_signal)
-		self.__state__ = next_state
+				self.__state__[x][i] = self.__function__(cur_signal)
+
 		return is_change
 
 
@@ -88,14 +87,14 @@ def f(x):
 		return 0.0
 	return 1.0
 
-#dist = [[0., 70., 50., 30.],
-#		[70., 0., 40., 70.],
-#		[50., 40., 0., 30.],
-#		[30., 70., 30., 0.]]
+dist = [[0., 70., 50., 30.],
+		[70., 0., 40., 70.],
+		[50., 40., 0., 30.],
+		[30., 70., 30., 0.]]
 
-dist = [[0., 70., 50.],
-		[70., 0., 40.],
-		[50., 40., 0.]]
+#dist = [[0., 70., 50.],
+#		[70., 0., 40.],
+#		[50., 40., 0.]]
 
 #print random.random()
 nn = Neural_Network_TSP(dist, f)
