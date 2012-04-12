@@ -1,4 +1,5 @@
 import random
+import math
 
 class Neural_Network_TSP:
 
@@ -8,9 +9,9 @@ class Neural_Network_TSP:
 	__count_sities__ = 0
 	__function__ = 0
 
-	__A__ = 100.0
-	__B__ = 100.0
-	__C__ = 10.0
+	__A__ = __B__ = 200.0
+	#__B__ = 200.0
+	__C__ = 2.0
 	__D__ = 90.0
 
 	__state__ = []
@@ -32,7 +33,7 @@ class Neural_Network_TSP:
 			self.__state__.append([])
 			for j in range(self.__count_sities__):
 				#__W__[i].append(__start_init_type_statement__)
-				self.__state__[i].append(0.5)#random.random()) #Return the next random floating point number in the range [0.0, 1.0)
+				self.__state__[i].append(0.0)#random.random()) #Return the next random floating point number in the range [0.0, 1.0)
 
 
 	def __calc_W__(self, x, i, y, j):
@@ -61,9 +62,12 @@ class Neural_Network_TSP:
 				for y in range(self.__count_sities__):
 					for j in range(self.__count_sities__):
 						#print 'w' + str(self.__calc_W__(x, i, y, j))
+						if i == j and x == y:
+							continue
 						cur_signal += self.__calc_W__(x, i, y, j) * self.__state__[y][j]
 
-				print cur_signal
+				cur_signal += 10
+				print cur_signal#str(self.__calc_W__(x, i, 0, 0)) + ' ' + str(self.__state__[0][0]) + ' = ' + str(cur_signal)
 				if self.__state__[x][i] != self.__function__(cur_signal):
 					is_change = False
 				self.__state__[x][i] = self.__function__(cur_signal)
@@ -74,10 +78,15 @@ class Neural_Network_TSP:
 	def run(self):
 		i = 0
 		changed = False
-		while i < 1 and not changed:
+		while i < 1000 and not changed:
 			changed = self.__update_state__()
 			i += 1
-		print self.__state__
+			print '---------'
+
+		for j in range(self.__count_sities__):
+			print self.__state__[j]
+
+		print i
 
 		#return step_function(x)
 
@@ -87,10 +96,13 @@ def f(x):
 		return 0.0
 	return 1.0
 
-dist = [[0., 70., 50., 30.],
-		[70., 0., 40., 70.],
-		[50., 40., 0., 30.],
-		[30., 70., 30., 0.]]
+def ftanh(x):
+	return 0.5 * (1 + math.tanh(x / 50))
+
+dist = [[0., 70., 30., 50.],
+		[70., 0., 70., 40.],
+		[30., 70., 0., 30.],
+		[50., 40., 30., 0.]]
 
 #dist = [[0., 70., 50.],
 #		[70., 0., 40.],
