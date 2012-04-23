@@ -28,7 +28,7 @@ class NeuralNetworkTSP:
 		self.__dist = d
 
 		self.__A = self.__B = len(d) * 100.0
-		self.__C = 0.45
+		self.__C = 0.65 #.45 #0.6
 		self.__D = 100.0
 
 		self.__init_states()
@@ -103,8 +103,8 @@ class NeuralNetworkTSP:
 			i += 1
 			#print '---------'
 
-		for j in range(self.__count_sities):
-			print self.__state[j]
+		#for j in range(self.__count_sities):
+		#	print self.__state[j]
 
 		print i
 
@@ -130,7 +130,13 @@ class NeuralNetworkTSP:
 						break
 
 
-		return correct, way
+		way_distance_length = 0
+		if correct:
+			for i in range(self.__count_sities):
+				way_distance_length += self.__dist[way[i]][way[(i + 1) % self.__count_sities]]
+		print way_distance_length
+
+		return correct, way, way_distance_length
 
 
 	def distance(self, pointA, pointB):

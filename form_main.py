@@ -19,6 +19,7 @@ class FormMain():
 
 	__sities = None
 	__way = []
+	__way_length = 0
 
 	__strings = None
 
@@ -34,7 +35,7 @@ class FormMain():
 		self.__form_main.title(self.__strings.getString('FORM_MAIN_TITLE'))
 		self.__form_main.iconbitmap(default = 'tsp_ico.ico')
 
-		self.__sities = [[40, 70], [220, 40], [160, 190], [250, 250], [340, 130]]  #1, 2, 5, 4, 3
+		self.__sities = [[40, 70], [220, 40], [160, 190], [250, 250], [340, 130], [380, 150], [260, 380], [100, 344]]  #1, 2, 5, 4, 3
 
 		self.__init_form()
 
@@ -97,6 +98,7 @@ class FormMain():
 
 
 		lenght = len(self.__sities)
+		self.__canvas_map.create_text(360, 380, text = str(self.__way_length))
 
 		for i in range(lenght):
 			self.__canvas_map.create_oval(self.__sities[i][0] - __point_radius,
@@ -113,7 +115,7 @@ class FormMain():
 
 		dist = self.__core_nn.createDistList(self.__sities)
 
-		correct, self.__way = self.__core_nn.run(dist)
+		correct, self.__way, self.__way_length = self.__core_nn.run(dist)
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
