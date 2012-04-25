@@ -27,9 +27,9 @@ class NeuralNetworkTSP:
 		#self.__function = step_function
 		self.__dist = d
 
-		self.__A = self.__B = len(d) * 100.0
-		self.__C = 0.65 #.45 #0.6
-		self.__D = 100.0
+		self.__A = self.__B = len(d) * 60.#60.0
+		self.__C = 0.7 #0.75
+		self.__D = 100.
 
 		self.__init_states()
 
@@ -50,7 +50,12 @@ class NeuralNetworkTSP:
 			self.__state.append([])
 			for j in range(self.__count_sities):
 				#__W[i].append(__start_init_type_statement)
-				self.__state[i].append(random.random()) #Return the next random floating point number in the range [0.0, 1.0)
+				next_rand = random.random()
+				#if next_rand < 0.5:
+				#	next_rand = 0
+				#else:
+				#	next_rand = 1
+				self.__state[i].append(next_rand) #Return the next random floating point number in the range [0.0, 1.0)
 
 
 	def __calc_W(self, x, i, y, j):
@@ -83,7 +88,7 @@ class NeuralNetworkTSP:
 							continue
 						cur_signal += self.__calc_W(x, i, y, j) * self.__state[y][j]
 
-				cur_signal += 1
+				#cur_signal += 1#00. * self.__count_sities
 				#print cur_signal#str(self.__calc_W(x, i, 0, 0)) + ' ' + str(self.__state[0][0]) + ' = ' + str(cur_signal)
 				if self.__state[x][i] != self.__step_function(cur_signal):
 					is_change = False
@@ -98,13 +103,13 @@ class NeuralNetworkTSP:
 
 		i = 0
 		changed = False
-		while i < 1000 and not changed:
+		while i < 100 and not changed:
 			changed = self.__update_state()
 			i += 1
 			#print '---------'
 
-		#for j in range(self.__count_sities):
-		#	print self.__state[j]
+		for j in range(self.__count_sities):
+			print self.__state[j]
 
 		print i
 
@@ -132,12 +137,16 @@ class NeuralNetworkTSP:
 
 		way_distance_length = 0
 		if correct:
-			for i in range(self.__count_sities):
-				way_distance_length += self.__dist[way[i]][way[(i + 1) % self.__count_sities]]
+			way_distance_length = self.__way_distance(way)
 		print way_distance_length
 
 		return correct, way, way_distance_length
 
+	def __way_distance(self, way):
+		way_distance_length = 0
+		for i in range(self.__count_sities):
+			way_distance_length += self.__dist[way[i]][way[(i + 1) % self.__count_sities]]
+		return way_distance_length
 
 	def distance(self, pointA, pointB):
 		return math.sqrt((float(pointA[0]) - float(pointB[0])) ** 2 + (float(pointA[1]) - float(pointB[1])) ** 2)

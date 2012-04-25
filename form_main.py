@@ -17,7 +17,7 @@ class FormMain():
 	__core_nn = 0
 	__canvas_map = None
 
-	__sities = None
+	__sities = []
 	__way = []
 	__way_length = 0
 
@@ -35,7 +35,7 @@ class FormMain():
 		self.__form_main.title(self.__strings.getString('FORM_MAIN_TITLE'))
 		self.__form_main.iconbitmap(default = 'tsp_ico.ico')
 
-		self.__sities = [[40, 70], [220, 40], [160, 190], [250, 250], [340, 130], [380, 150], [260, 380], [100, 344]]  #1, 2, 5, 4, 3
+		#self.__sities = [[40, 70], [220, 40], [160, 190], [240, 130], [380, 150], [260, 380], [100, 344], [280, 300]]  #1, 2, 5, 4, 3
 
 		self.__init_form()
 
@@ -54,6 +54,7 @@ class FormMain():
 						bg = 'white',
 						bd = 5,
 						relief = 'ridge')
+		self.__canvas_map.bind('<Button-1>', self.__canvas_click)
 		self.__canvas_map.pack()#side = 'left',
 		#				fill = 'both',
 		#				expand = 1)
@@ -71,6 +72,16 @@ class FormMain():
 		buttonCalc.bind("<Button-1>", self.__calc_nn)
 		#buttonCalc.place(x = 0, y = 0)
 		buttonCalc.pack(side = 'top')
+
+		buttonDelLast = ttk.Button(panelFrame,
+							text = self.__strings.getString('BUTTON_DEL_LAST'))
+		buttonDelLast.bind("<Button-1>", self.__canvas_del_last)
+		buttonDelLast.pack(side = 'top')
+
+		buttonClear = ttk.Button(panelFrame,
+							text = self.__strings.getString('BUTTON_CLEAR'))
+		buttonClear.bind("<Button-1>", self.__canvas_clear)
+		buttonClear.pack(side = 'top')
 
 		buttonExit = ttk.Button(panelFrame,
 							text = self.__strings.getString('BUTTON_QUIT'))
@@ -117,12 +128,33 @@ class FormMain():
 
 		correct, self.__way, self.__way_length = self.__core_nn.run(dist)
 
+		for _ in range(10):
+			if correct:
+				break
+			correct, self.__way, self.__way_length = self.__core_nn.run(dist)
+
 		print correct, self.__way
 		self.__repaint_canvas(correct)
 
 
 	def __quit(self, event):
 		self.__form_main.quit()
+
+	def __canvas_click(self, event):
+		sity = []
+		sity.append(event.x)
+		sity.append(event.y)
+		self.__sities.append(sity)
+		self.__repaint_canvas(False)
+
+	def __canvas_del_last(self, event):
+		if len(self.__sities) > 0:
+			self.__sities.pop()
+			self.__repaint_canvas(False)
+
+	def __canvas_clear(self, event):
+		self.__sities = []
+		self.__repaint_canvas(False)
 
 
 	def run(self):
