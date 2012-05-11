@@ -5,6 +5,7 @@ import neural_network
 
 
 import ttk
+import random
 
 class FormMain():
 	'Main Form for TSP neural network'
@@ -83,6 +84,11 @@ class FormMain():
 		buttonClear.bind("<Button-1>", self.__canvas_clear)
 		buttonClear.pack(side = 'top')
 
+		buttonAddTenRand = ttk.Button(panelFrame,
+							text = self.__strings.getString('BUTTON_ADD_N_RAND'))
+		buttonAddTenRand.bind('<Button-1>', self.__canvas_add_n_rand)
+		buttonAddTenRand.pack(side = 'top')
+
 		buttonExit = ttk.Button(panelFrame,
 							text = self.__strings.getString('BUTTON_QUIT'))
 		buttonExit.bind('<Button-1>', self.__quit)
@@ -126,12 +132,12 @@ class FormMain():
 
 		dist = self.__core_nn.createDistList(self.__sities)
 
-		correct, self.__way, self.__way_length = self.__core_nn.run(dist)
+		correct = False
 
-		for _ in range(10):
+		for _ in range(1):
 			if correct:
 				break
-			correct, self.__way, self.__way_length = self.__core_nn.run(dist)
+			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True)
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
@@ -150,10 +156,18 @@ class FormMain():
 	def __canvas_del_last(self, event):
 		if len(self.__sities) > 0:
 			self.__sities.pop()
+			self.__way_length = 0
 			self.__repaint_canvas(False)
 
 	def __canvas_clear(self, event):
 		self.__sities = []
+		self.__way_length = 0
+		self.__repaint_canvas(False)
+
+	def __canvas_add_n_rand(self, event):
+		for _ in range(7):
+			self.__sities.append([int(random.random() * (self.__SIZE_MAP_WIDTH - 10)) + 5,
+										 int(random.random() * (self.__SIZE_MAP_WIDTH - 10)) + 5])
 		self.__repaint_canvas(False)
 
 

@@ -55,7 +55,7 @@ class NeuralNetworkTSP:
 				#	next_rand = 0
 				#else:
 				#	next_rand = 1
-				self.__state[i].append(next_rand) #Return the next random floating point number in the range [0.0, 1.0)
+				self.__state[i].append(next_rand / float(self.__count_sities)) #Return the next random floating point number in the range [0.0, 1.0)
 
 
 	def __calc_W(self, x, i, y, j):
@@ -96,11 +96,7 @@ class NeuralNetworkTSP:
 
 		return is_change
 
-
-	def run(self, dist):
-
-		self.__init_network(dist)
-
+	def __Hopfild_network_run(self):
 		i = 0
 		changed = False
 		while i < 100 and not changed:
@@ -108,12 +104,11 @@ class NeuralNetworkTSP:
 			i += 1
 			#print '---------'
 
-		for j in range(self.__count_sities):
-			print self.__state[j]
-
 		print i
 
-		correct = True
+
+	def __check_for_correct(self):
+		#correct = True
 		for i in range(self.__count_sities):
 			temp = 0
 			for j in range(self.__count_sities):
@@ -122,10 +117,55 @@ class NeuralNetworkTSP:
 				if self.__state[j][i] == 1.0:
 					temp += 1
 			if temp != 2:
-				correct = False
-				break
+				return False
+		return True
+
+	def __annealing_network_run(self):
+		d_max = math.sqrt(2) * 400.
+		T = 1000.
+		d_T = 100.
+
+		while T > 0.:
+			U_xi = []
+			V_xi = []
+
+			X = int(random.random() * self.__count_sities)
+
+			for i in range(self.__count_sities):
+				temp = 0.0
+				for Y in range(self.__count_sities):
+					if X != Y:
+						temp -= d_max * self.__state[Y][i]
+						temp -= self.__dist[X][Y] * (self.__state[Y][(i - 1) % self.__count_sities] 
+															+ self.__state[Y][(i + 1) % self.__count_sities])
+				U_xi.append(temp)
+
+				V_xi.append(math.exp(U_xi[i] / T))
+
+			sum_V = sum(V_xi)
+			print X, sum_V
+
+			for i in range(self.__count_sities):
+				self.__state[X][i] = V_xi[i] / sum_V
+
+			T -= d_T
+
+
+	def run(self, dist, annealing):
+
+		self.__init_network(dist)
+
+		if not annealing:
+			self.__Hopfild_network_run()
+		else:
+			self.__annealing_network_run()
+
+		for j in range(self.__count_sities):
+			print self.__state[j]
 
 		way = []
+
+		correct = self.__check_for_correct()
 
 		if correct:
 			for j in range(self.__count_sities):
@@ -138,7 +178,7 @@ class NeuralNetworkTSP:
 		way_distance_length = 0
 		if correct:
 			way_distance_length = self.__way_distance(way)
-		print way_distance_length
+			print way_distance_length
 
 		return correct, way, way_distance_length
 
