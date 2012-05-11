@@ -55,7 +55,7 @@ class NeuralNetworkTSP:
 				#	next_rand = 0
 				#else:
 				#	next_rand = 1
-				self.__state[i].append(next_rand / float(self.__count_sities)) #Return the next random floating point number in the range [0.0, 1.0)
+				self.__state[i].append(next_rand)# / float(self.__count_sities)) #Return the next random floating point number in the range [0.0, 1.0)
 
 
 	def __calc_W(self, x, i, y, j):
@@ -122,14 +122,16 @@ class NeuralNetworkTSP:
 
 	def __annealing_network_run(self):
 		d_max = math.sqrt(2) * 400.
-		T = 1000.
-		d_T = 100.
+		T = 200.
+		d_T = 0.02
+
+		X = 0
 
 		while T > 0.:
 			U_xi = []
 			V_xi = []
 
-			X = int(random.random() * self.__count_sities)
+			#X = int(random.random() * self.__count_sities)
 
 			for i in range(self.__count_sities):
 				temp = 0.0
@@ -145,15 +147,26 @@ class NeuralNetworkTSP:
 			sum_V = sum(V_xi)
 			print X, sum_V
 
+			if sum_V == 0.0:
+				break
+
 			for i in range(self.__count_sities):
 				self.__state[X][i] = V_xi[i] / sum_V
 
+			#for j in range(self.__count_sities):
+			#	print self.__state[j]
+
 			T -= d_T
+			X += 1
+			X %= self.__count_sities
 
 
 	def run(self, dist, annealing):
 
 		self.__init_network(dist)
+
+		#for j in range(self.__count_sities):
+		#	print self.__dist[j]
 
 		if not annealing:
 			self.__Hopfild_network_run()

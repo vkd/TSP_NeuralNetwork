@@ -166,8 +166,8 @@ class FormMain():
 
 	def __canvas_add_n_rand(self, event):
 		for _ in range(7):
-			self.__sities.append([int(random.random() * (self.__SIZE_MAP_WIDTH - 10)) + 5,
-										 int(random.random() * (self.__SIZE_MAP_WIDTH - 10)) + 5])
+			self.__sities.append([int(random.random() * (self.__SIZE_MAP_WIDTH - 20)) + 10,
+										 int(random.random() * (self.__SIZE_MAP_WIDTH - 20)) + 10])
 		self.__repaint_canvas(False)
 
 
