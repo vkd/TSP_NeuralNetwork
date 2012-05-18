@@ -1,8 +1,9 @@
+'''Main Form of TSP'''
+
 from Tkinter import *
 
 import load_strings
 import neural_network
-
 
 import ttk
 import random
@@ -10,24 +11,24 @@ import random
 class FormMain():
 	'Main Form for TSP neural network'
 
+	'Form constants'
 	__SIZE_WINDOW = '600x400'
 	__SIZE_MAP_HEIGHT = 400
 	__SIZE_MAP_WIDTH = __SIZE_MAP_HEIGHT
 
+	'Initialization of variables'
 	__form_main = 0
 	__core_nn = 0
 	__canvas_map = None
-
+	__progressbar_network = None
 	__sities = []
 	__way = []
 	__way_length = 0
-
 	__strings = None
 
 
 	def __init__(self):
 		self.__core_nn = neural_network.NeuralNetworkTSP()
-
 		self.__strings = load_strings.LoadStrings('strings')
 
 		self.__form_main = Tk()
@@ -35,14 +36,12 @@ class FormMain():
 		self.__form_main.geometry(self.__SIZE_WINDOW)
 		self.__form_main.title(self.__strings.getString('FORM_MAIN_TITLE'))
 		self.__form_main.iconbitmap(default = 'tsp_ico.ico')
-
-		#self.__sities = [[40, 70], [220, 40], [160, 190], [240, 130], [380, 150], [260, 380], [100, 344], [280, 300]]  #1, 2, 5, 4, 3
-
 		self.__init_form()
 
 
-
 	def __init_form(self):
+		'Initialization components on main form'
+
 		mapFrame = Frame(self.__form_main,
 						height = self.__SIZE_MAP_HEIGHT,
 						width = self.__SIZE_MAP_WIDTH,
@@ -56,16 +55,13 @@ class FormMain():
 						bd = 5,
 						relief = 'ridge')
 		self.__canvas_map.bind('<Button-1>', self.__canvas_click)
-		self.__canvas_map.pack()#side = 'left',
-		#				fill = 'both',
-		#				expand = 1)
+		self.__canvas_map.pack()
 
 		panelFrame = Frame(self.__form_main)
-								#bg = 'orange')
-
 		panelFrame.pack(side = 'right',
 							 fill = 'both',
 							 expand = 1)
+		'---===---'
 
 		buttonCalc = ttk.Button(panelFrame,
 							text = self.__strings.getString('BUTTON_CALC'))
@@ -88,6 +84,10 @@ class FormMain():
 							text = self.__strings.getString('BUTTON_ADD_N_RAND'))
 		buttonAddTenRand.bind('<Button-1>', self.__canvas_add_n_rand)
 		buttonAddTenRand.pack(side = 'top')
+
+		self.__progressbar_network = ttk.Progressbar(panelFrame)
+		self.__progressbar_network.pack(side = 'top')
+		#self.__progressbar_network.start()
 
 		buttonExit = ttk.Button(panelFrame,
 							text = self.__strings.getString('BUTTON_QUIT'))
@@ -137,7 +137,7 @@ class FormMain():
 		for _ in range(1):
 			if correct:
 				break
-			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True)
+			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True, self.__update_progressbar)
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
@@ -173,4 +173,8 @@ class FormMain():
 
 	def run(self):
 		self.__form_main.mainloop()
+
+	def __update_progressbar(self, max_value, value):
+		self.__progressbar_network.maximum = max_value
+		self.__progressbar_network.value = max_value - value
 
