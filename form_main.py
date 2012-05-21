@@ -20,7 +20,6 @@ class FormMain():
 	__form_main = 0
 	__core_nn = 0
 	__canvas_map = None
-	__progressbar_network = None
 	__sities = []
 	__way = []
 	__way_length = 0
@@ -57,40 +56,42 @@ class FormMain():
 		self.__canvas_map.bind('<Button-1>', self.__canvas_click)
 		self.__canvas_map.pack()
 
-		panelFrame = Frame(self.__form_main)
+		panelFrame = Frame(self.__form_main,
+						bd = 5)
 		panelFrame.pack(side = 'right',
-							 fill = 'both',
-							 expand = 1)
+						fill = 'both',
+						expand = 1)
+
+		panelCalc = Frame(self.__form_main)
+		panelCalc.pack(side = 'top')
 		'---===---'
 
 		buttonCalc = ttk.Button(panelFrame,
-							text = self.__strings.getString('BUTTON_CALC'))
-		#					command = print_out)
+						text = self.__strings.getString('BUTTON_CALC'))
+	#					command = print_out)
 		buttonCalc.bind("<Button-1>", self.__calc_nn)
 		#buttonCalc.place(x = 0, y = 0)
 		buttonCalc.pack(side = 'top')
 
 		buttonDelLast = ttk.Button(panelFrame,
-							text = self.__strings.getString('BUTTON_DEL_LAST'))
+						text = self.__strings.getString('BUTTON_DEL_LAST'))
 		buttonDelLast.bind("<Button-1>", self.__canvas_del_last)
 		buttonDelLast.pack(side = 'top')
 
 		buttonClear = ttk.Button(panelFrame,
-							text = self.__strings.getString('BUTTON_CLEAR'))
+						text = self.__strings.getString('BUTTON_CLEAR'))
 		buttonClear.bind("<Button-1>", self.__canvas_clear)
 		buttonClear.pack(side = 'top')
 
 		buttonAddTenRand = ttk.Button(panelFrame,
-							text = self.__strings.getString('BUTTON_ADD_N_RAND'))
+						text = self.__strings.getString('BUTTON_ADD_N_RAND'))
 		buttonAddTenRand.bind('<Button-1>', self.__canvas_add_n_rand)
 		buttonAddTenRand.pack(side = 'top')
 
-		self.__progressbar_network = ttk.Progressbar(panelFrame)
-		self.__progressbar_network.pack(side = 'top')
-		#self.__progressbar_network.start()
+		
 
 		buttonExit = ttk.Button(panelFrame,
-							text = self.__strings.getString('BUTTON_QUIT'))
+						text = self.__strings.getString('BUTTON_QUIT'))
 		buttonExit.bind('<Button-1>', self.__quit)
 		buttonExit.pack(side = 'bottom')
 
@@ -107,11 +108,11 @@ class FormMain():
 			lenght = len(self.__way)
 			for i in range(lenght):
 				self.__canvas_map.create_line(self.__sities[self.__way[i]][0],
-														self.__sities[self.__way[i]][1],
-														self.__sities[self.__way[(i + 1) % lenght]][0],
-														self.__sities[self.__way[(i + 1) % lenght]][1],
-														fill = 'black',
-														width = 2)
+											self.__sities[self.__way[i]][1],
+											self.__sities[self.__way[(i + 1) % lenght]][0],
+											self.__sities[self.__way[(i + 1) % lenght]][1],
+											fill = 'black',
+											width = 2)
 
 
 		lenght = len(self.__sities)
@@ -119,13 +120,13 @@ class FormMain():
 
 		for i in range(lenght):
 			self.__canvas_map.create_oval(self.__sities[i][0] - __point_radius,
-													self.__sities[i][1] - __point_radius,
-													self.__sities[i][0] + __point_radius,
-													self.__sities[i][1] + __point_radius,
-													fill = 'purple')
+											self.__sities[i][1] - __point_radius,
+											self.__sities[i][0] + __point_radius,
+											self.__sities[i][1] + __point_radius,
+											fill = 'purple')
 			self.__canvas_map.create_text(self.__sities[i][0],
-													self.__sities[i][1] - 13,
-													text = str(i + 1))
+											self.__sities[i][1] - 13,
+											text = str(i + 1))
 
 
 	def __calc_nn(self, event):
@@ -137,7 +138,7 @@ class FormMain():
 		for _ in range(1):
 			if correct:
 				break
-			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True, self.__update_progressbar)
+			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True)
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
@@ -146,6 +147,7 @@ class FormMain():
 	def __quit(self, event):
 		self.__form_main.quit()
 
+
 	def __canvas_click(self, event):
 		sity = []
 		sity.append(event.x)
@@ -153,16 +155,19 @@ class FormMain():
 		self.__sities.append(sity)
 		self.__repaint_canvas(False)
 
+
 	def __canvas_del_last(self, event):
 		if len(self.__sities) > 0:
 			self.__sities.pop()
 			self.__way_length = 0
 			self.__repaint_canvas(False)
 
+
 	def __canvas_clear(self, event):
 		self.__sities = []
 		self.__way_length = 0
 		self.__repaint_canvas(False)
+
 
 	def __canvas_add_n_rand(self, event):
 		for _ in range(7):
@@ -173,6 +178,7 @@ class FormMain():
 
 	def run(self):
 		self.__form_main.mainloop()
+
 
 	def __update_progressbar(self, max_value, value):
 		self.__progressbar_network.maximum = max_value

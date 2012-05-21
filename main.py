@@ -1,5 +1,6 @@
 '''Traveling Salesman Problem using Neural Network
-Author: Dmitry Kutakov'''
+Author: Dmitry Kutakov
+RSREU 2012'''
 import form_main
 
 

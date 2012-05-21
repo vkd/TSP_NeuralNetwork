@@ -118,7 +118,7 @@ class NeuralNetworkTSP:
 		return True
 
 
-	def __annealing_network_run(self, update_progressbar):
+	def __annealing_network_run(self):
 		'Run neural network by annealing algorithm'
 		d_max = math.sqrt(2) * 400.
 		max_T = 200.
@@ -126,7 +126,6 @@ class NeuralNetworkTSP:
 		d_T = 0.02
 
 		X = 0
-		update_progressbar(max_T, T)
 
 		while T > 0.:
 			U_xi = []
@@ -154,10 +153,9 @@ class NeuralNetworkTSP:
 			T -= d_T
 			X += 1
 			X %= self.__count_sities
-			update_progressbar(max_T, T)
 
 
-	def run(self, dist, annealing, update_progressbar):
+	def run(self, dist, annealing):
 		'Run neural network for calculation shortest way'
 
 		self.__init_network(dist)
@@ -165,7 +163,7 @@ class NeuralNetworkTSP:
 		if not annealing:
 			self.__Hopfild_network_run()
 		else:
-			self.__annealing_network_run(update_progressbar)
+			self.__annealing_network_run()
 
 		for j in range(self.__count_sities):
 			print self.__state[j]
