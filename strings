@@ -1,6 +1,6 @@
-FORM_MAIN_TITLE=Travelling Salesman Problem
-BUTTON_QUIT=Quit
-BUTTON_CALC=Calc
-BUTTON_CLEAR=Clear
-BUTTON_DEL_LAST=Delete last
-BUTTON_ADD_N_RAND=Add some rand
+FORM_MAIN_TITLE=Задача коммивояжера
+BUTTON_QUIT=Выход
+BUTTON_CALC=Рассчитать
+BUTTON_CLEAR=Очистить
+BUTTON_DEL_LAST=Удалить последний
+BUTTON_ADD_N_RAND=Добавить случайный
