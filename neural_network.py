@@ -123,7 +123,7 @@ class NeuralNetworkTSP:
 		d_max = math.sqrt(2) * 400.
 		max_T = 200.
 		T = max_T
-		d_T = 0.02
+		d_T = 0.01
 
 		X = 0
 
@@ -151,8 +151,8 @@ class NeuralNetworkTSP:
 				self.__state[X][i] = V_xi[i] / sum_V
 
 			T -= d_T
-			X += 1
-			X %= self.__count_sities
+			X = int(random.random() * self.__count_sities);
+			#X %= self.__count_sities
 
 
 	def run(self, dist, annealing):

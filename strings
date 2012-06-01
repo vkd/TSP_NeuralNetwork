@@ -4,3 +4,7 @@ BUTTON_CALC=Рассчитать
 BUTTON_CLEAR=Очистить
 BUTTON_DEL_LAST=Удалить последний
 BUTTON_ADD_N_RAND=Добавить случайный
+LABEL_COUNT_SITIES=Количество городов
+LABEL_LENGTH=Длина пути
+STATUS_COMPLETED=Расчет завершен
+STATUS_WAIT=     Подождите...     

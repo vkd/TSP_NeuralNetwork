@@ -8,7 +8,7 @@ import neural_network
 import ttk
 import random
 
-class FormMain():
+class FormMain:
 	'Main Form for TSP neural network'
 
 	'Form constants'
@@ -20,6 +20,9 @@ class FormMain():
 	__form_main = 0
 	__core_nn = 0
 	__canvas_map = None
+	__lblLength = None
+	__lblStatus = None
+	__lblCountSities = None
 	__sities = []
 	__way = []
 	__way_length = 0
@@ -67,31 +70,48 @@ class FormMain():
 		'---===---'
 
 		buttonCalc = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_CALC'))
+						text = self.__strings.getString('BUTTON_CALC'),
+						width = 150)
 	#					command = print_out)
 		buttonCalc.bind("<Button-1>", self.__calc_nn)
 		#buttonCalc.place(x = 0, y = 0)
 		buttonCalc.pack(side = 'top')
 
 		buttonDelLast = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_DEL_LAST'))
+						text = self.__strings.getString('BUTTON_DEL_LAST'),
+						width = 150)
 		buttonDelLast.bind("<Button-1>", self.__canvas_del_last)
 		buttonDelLast.pack(side = 'top')
 
 		buttonClear = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_CLEAR'))
+						text = self.__strings.getString('BUTTON_CLEAR'),
+						width = 150)
 		buttonClear.bind("<Button-1>", self.__canvas_clear)
 		buttonClear.pack(side = 'top')
 
 		buttonAddTenRand = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_ADD_N_RAND'))
+						text = self.__strings.getString('BUTTON_ADD_N_RAND'),
+						width = 150)
 		buttonAddTenRand.bind('<Button-1>', self.__canvas_add_n_rand)
 		buttonAddTenRand.pack(side = 'top')
 
+		self.__lblLength = ttk.Label(panelFrame,
+						text = self.__strings.getString('LABEL_LENGTH') + ': ...')
+		self.__lblLength.pack(side = 'top')
+
+		self.__lblCountSities = ttk.Label(panelFrame,
+						text = self.__strings.getString('LABEL_COUNT_SITIES') + ': 0')
+		self.__lblCountSities.pack(side = 'top')
+
 		
 
+		self.__lblStatus = ttk.Label(panelFrame,
+						text = '')
+		self.__lblStatus.pack(side = 'bottom')
+
 		buttonExit = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_QUIT'))
+						text = self.__strings.getString('BUTTON_QUIT'),
+						width = 150)
 		buttonExit.bind('<Button-1>', self.__quit)
 		buttonExit.pack(side = 'bottom')
 
@@ -116,7 +136,9 @@ class FormMain():
 
 
 		lenght = len(self.__sities)
-		self.__canvas_map.create_text(360, 380, text = str(self.__way_length))
+		self.__lblCountSities.config(text = self.__strings.getString('LABEL_COUNT_SITIES') + ': ' + str(lenght))
+		#self.__canvas_map.create_text(360, 380, text = str(self.__way_length))
+		self.__lblLength.config(text = self.__strings.getString('LABEL_LENGTH') + ': ' + str(int(self.__way_length)))
 
 		for i in range(lenght):
 			self.__canvas_map.create_oval(self.__sities[i][0] - __point_radius,
@@ -130,6 +152,8 @@ class FormMain():
 
 
 	def __calc_nn(self, event):
+		self.__lblStatus.config(text = self.__strings.getString('STATUS_WAIT'))
+		self.__lblStatus.update_idletasks()
 
 		dist = self.__core_nn.createDistList(self.__sities)
 
@@ -142,6 +166,9 @@ class FormMain():
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
+
+		self.__lblStatus.config(text = self.__strings.getString('STATUS_COMPLETED'))
+		self.__lblStatus.update_idletasks()
 
 
 	def __quit(self, event):
@@ -161,16 +188,18 @@ class FormMain():
 			self.__sities.pop()
 			self.__way_length = 0
 			self.__repaint_canvas(False)
+			self.__lblStatus.config(text = '')
 
 
 	def __canvas_clear(self, event):
 		self.__sities = []
 		self.__way_length = 0
 		self.__repaint_canvas(False)
+		self.__lblStatus.config(text = '')
 
 
 	def __canvas_add_n_rand(self, event):
-		for _ in range(7):
+		for _ in range(1):
 			self.__sities.append([int(random.random() * (self.__SIZE_MAP_WIDTH - 20)) + 10,
 										 int(random.random() * (self.__SIZE_MAP_WIDTH - 20)) + 10])
 		self.__repaint_canvas(False)
