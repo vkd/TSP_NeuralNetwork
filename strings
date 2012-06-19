@@ -1,10 +1,14 @@
 FORM_MAIN_TITLE=Задача коммивояжера
 BUTTON_QUIT=Выход
-BUTTON_CALC=Рассчитать
+BUTTON_CALC_1=Сеть Хопфилда
+BUTTON_CALC_2=Алгоритм отжига
 BUTTON_CLEAR=Очистить
 BUTTON_DEL_LAST=Удалить последний
 BUTTON_ADD_N_RAND=Добавить случайный
 LABEL_COUNT_SITIES=Количество городов
 LABEL_LENGTH=Длина пути
 STATUS_COMPLETED=Расчет завершен
-STATUS_WAIT=     Подождите...     
+STATUS_WAIT=            Подождите...            
+STATUS_INCORRECT=Некорректный результат
+STATUS_LITTLE=Недостаточно городов
+STATUS_NOTHING=Города отсутствуют

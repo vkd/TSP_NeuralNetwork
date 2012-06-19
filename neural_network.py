@@ -123,7 +123,7 @@ class NeuralNetworkTSP:
 		d_max = math.sqrt(2) * 400.
 		max_T = 200.
 		T = max_T
-		d_T = 0.01
+		d_T = 0.02
 
 		X = 0
 

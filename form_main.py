@@ -69,11 +69,17 @@ class FormMain:
 		panelCalc.pack(side = 'top')
 		'---===---'
 
+		buttonCalc1 = ttk.Button(panelFrame,
+						text = self.__strings.getString('BUTTON_CALC_1'),
+						width = 150)
+		buttonCalc1.bind("<Button-1>", self.__calc_nn1)
+		buttonCalc1.pack(side = 'top')
+
 		buttonCalc = ttk.Button(panelFrame,
-						text = self.__strings.getString('BUTTON_CALC'),
+						text = self.__strings.getString('BUTTON_CALC_2'),
 						width = 150)
 	#					command = print_out)
-		buttonCalc.bind("<Button-1>", self.__calc_nn)
+		buttonCalc.bind("<Button-1>", self.__calc_nn2)
 		#buttonCalc.place(x = 0, y = 0)
 		buttonCalc.pack(side = 'top')
 
@@ -151,7 +157,12 @@ class FormMain:
 											text = str(i + 1))
 
 
-	def __calc_nn(self, event):
+	def __calc_nn(self, annealing):
+
+		if len(self.__sities) <= 2:
+			self.__lblStatus.config(text = self.__strings.getString('STATUS_LITTLE'))
+			return
+
 		self.__lblStatus.config(text = self.__strings.getString('STATUS_WAIT'))
 		self.__lblStatus.update_idletasks()
 
@@ -162,14 +173,23 @@ class FormMain:
 		for _ in range(1):
 			if correct:
 				break
-			correct, self.__way, self.__way_length = self.__core_nn.run(dist, True)
+			correct, self.__way, self.__way_length = self.__core_nn.run(dist, annealing)
 
 		print correct, self.__way
 		self.__repaint_canvas(correct)
 
-		self.__lblStatus.config(text = self.__strings.getString('STATUS_COMPLETED'))
-		self.__lblStatus.update_idletasks()
+		if correct:
+			self.__lblStatus.config(text = self.__strings.getString('STATUS_COMPLETED'))
+			self.__lblStatus.update_idletasks()
+		else:
+			self.__lblStatus.config(text = self.__strings.getString('STATUS_INCORRECT'))
+			self.__lblStatus.update_idletasks()
 
+	def __calc_nn1(self, event):
+		self.__calc_nn(False)
+
+	def __calc_nn2(self, event):
+		self.__calc_nn(True)
 
 	def __quit(self, event):
 		self.__form_main.quit()
@@ -189,9 +209,13 @@ class FormMain:
 			self.__way_length = 0
 			self.__repaint_canvas(False)
 			self.__lblStatus.config(text = '')
+		else:
+			self.__lblStatus.config(text = self.__strings.getString('STATUS_NOTHING'))
 
 
 	def __canvas_clear(self, event):
+		if len(self.__sities) == 0:
+			self.__lblStatus.config(text = self.__strings.getString('STATUS_NOTHING'))
 		self.__sities = []
 		self.__way_length = 0
 		self.__repaint_canvas(False)
